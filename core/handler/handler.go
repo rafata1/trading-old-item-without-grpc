@@ -9,6 +9,17 @@ import (
 	"trading.olditem.app/core/type"
 )
 
+
+func addCorsHeader(res http.ResponseWriter) {
+	headers := res.Header()
+	headers.Add("Access-Control-Allow-Origin", "*")
+	headers.Add("Vary", "Origin")
+	headers.Add("Vary", "Access-Control-Request-Method")
+	headers.Add("Vary", "Access-Control-Request-Headers")
+	headers.Add("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, token")
+	headers.Add("Access-Control-Allow-Methods", "GET, POST,OPTIONS")
+}
+
 func Greeting(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to trading-old-item server")
 }
@@ -30,6 +41,15 @@ func encodeJson(v interface{}, jData *[]byte)  {
 
 func Login(writer http.ResponseWriter, request *http.Request) {
 
+
+	//handle preflight
+	addCorsHeader(writer)
+	if request.Method == "OPTIONS" {
+		writer.WriteHeader(http.StatusOK)
+		return
+	}
+
+
 	var logReq _type.LoginRequest
 	decodeJson(request, &logReq)
 
@@ -44,6 +64,14 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 }
 
 func Signup(writer http.ResponseWriter, request *http.Request)  {
+
+
+	//handle preflight
+	addCorsHeader(writer)
+	if request.Method == "OPTIONS" {
+		writer.WriteHeader(http.StatusOK)
+		return
+	}
 
 	var signupReq _type.SignupRequest
 	decodeJson(request, &signupReq)
