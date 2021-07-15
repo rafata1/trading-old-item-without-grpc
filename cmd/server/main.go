@@ -15,9 +15,9 @@ func main() {
 	repo.ConnectToDB()
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", handler2.Greeting)
-	r.HandleFunc("/api/login", handler2.Login)
-	r.HandleFunc("/api/signup", handler2.Signup)
+	r.HandleFunc("/", handler2.Greeting).Methods("GET")
+	r.HandleFunc("/api/login", handler2.Login).Methods("POST", "OPTIONS")
+	r.HandleFunc("/api/signup", handler2.Signup).Methods("POST","OPTIONS")
 
 	port := os.Getenv("PORT")
 	myServer := http.Server{Addr: ":"+port, Handler: r }
