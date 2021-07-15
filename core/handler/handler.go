@@ -2,11 +2,16 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"trading.olditem.app/core/repo"
 	"trading.olditem.app/core/type"
 )
+
+func Greeting(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Welcome to trading-old-item server")
+}
 
 func decodeJson(request *http.Request, v interface{} ) {
 	body, err := ioutil.ReadAll(request.Body)
