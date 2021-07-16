@@ -4,13 +4,13 @@ import "time"
 
 //Database related type
 type User struct {
-	ID int `db:"id"`
-	Email string `db:"email"`
-	Username string `db:"username"`
-	Password string `db:"password"`
-	PhoneNumber string `db:"phone_number"`
-	Gender string `db:"gender"`
-	DateOfBirth string `db:"dob"`
+	ID int `json:"id" db:"id"`
+	Email string `json:"email" db:"email"`
+	Username string ` json:"username" db:"username"`
+	Password string `json:"password" db:"password"`
+	PhoneNumber string `json:"phone_number" db:"phone_number"`
+	Gender string `json:"gender" db:"gender"`
+	DateOfBirth string `json:"date_of_birth" db:"dob"`
 }
 
 type Post struct {

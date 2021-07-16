@@ -55,14 +55,24 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 	var logReq _type.LoginRequest
 	decodeJson(request, &logReq)
 
-	statusCode, detail := repo.Login(logReq.Email, logReq.Password)
+	statusCode, detail, result := repo.Login(logReq.Email, logReq.Password)
 
-	logRes := _type.LoginResponse{StatusCode: statusCode, Detail: detail}
+	if statusCode != 200 {
+		logRes := _type.LoginResponse{StatusCode: statusCode, Detail: detail}
+		var jData []byte
+		encodeJson(logRes, &jData)
+
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(jData)
+		return
+	}
+
 	var jData []byte
-	encodeJson(logRes, &jData)
-
+	encodeJson(result, &jData)
 	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
 	writer.Write(jData)
+
 }
 
 func Signup(writer http.ResponseWriter, request *http.Request)  {

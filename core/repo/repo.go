@@ -48,21 +48,21 @@ func SignUp(email string, username string, password string, phone_number string,
 	return 200, "Thêm tài khoản thành công"
 }
 
-func Login(email string, password string) (statusCode int, detail string) {
+func Login(email string, password string) (statusCode int, detail string, result *_type.User) {
 
 	//check if email is existed
 	var user _type.User
 	myDB.Get(&user, "SELECT id, email, username, password, phone_number, gender, dob FROM Users WHERE email=? LIMIT 1", email)
 	if user.Email != email {
-		return 101, "Email không tồn tại"
+		return 101, "Email không tồn tại", &_type.User{}
 	}
 	//check password
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return 202, "Password sai"
+		return 202, "Password sai", &_type.User{}
 	}
 
-	return 200, "Đăng nhập thành công"
+	return 200, "Đăng nhập thành công", &user
 }
 
 func AddPost(owner_id int, name string, brand string, _type string, amount int, description string,
