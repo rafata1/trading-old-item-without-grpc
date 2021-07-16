@@ -12,7 +12,7 @@ import (
 var myDB *sqlx.DB
 
 func ConnectToDB() {
-	db, err := sqlx.Connect("mysql", "sql6425032:bnMVGBV6SF@(sql6.freesqldatabase.com:3306)/sql6425032")
+	db, err := sqlx.Connect("mysql", "sql6425032:bnMVGBV6SF@(sql6.freesqldatabase.com:3306)/sql6425032?parseTime=true")
 	myDB = db
 	if err != nil {
 		log.Fatalf("Err occured while connecting to db")
@@ -63,4 +63,44 @@ func Login(email string, password string) (statusCode int, detail string) {
 	}
 
 	return 200, "Đăng nhập thành công"
+}
+
+func AddPost(owner_id int, name string, brand string, _type string, amount int, description string,
+	image_url string) (statusCode int, detail string) {
+
+	queryCode := `INSERT INTO posts (owner_id, name, brand, type, amount, description, image_url, status) VALUES (?, 
+?, ?, ?, ? , ? ,? ,? )`
+	myDB.MustExec(queryCode, owner_id, name, brand, _type, amount, description, image_url, "available")
+	return 200, "Thêm bài thành công"
+}
+
+func GetAllPost() (statusCode int, detail string, result *[]_type.Post) {
+	posts := []_type.Post {}
+	err := myDB.Select(&posts,`SELECT * FROM posts WHERE status = "available"`)
+	if err != nil {
+		return 101, "Cannot get posts from db", &[]_type.Post{}
+	}
+	return  200, "Lấy dữ liệu thành công", &posts
+}
+
+func GetPostByID(post_id int) (statusCode int, detail string, result *_type.Post) {
+
+	post := _type.Post{}
+	err := myDB.Get(&post, "SELECT * FROM posts WHERE id = ?", post_id)
+	if err != nil {
+		return 101, "Cannot get  post by id", &_type.Post {}
+	}
+
+	return 200, "Lấy dữ liệu thành công", &post
+
+}
+
+func GetPostsOfUser(owner_id int) (statusCode int, detail string, result *[]_type.Post) {
+	userPosts := []_type.Post {}
+	err := myDB.Select(&userPosts,`SELECT * FROM posts WHERE owner_id = ?`,owner_id)
+	if err != nil {
+		panic(err)
+		return 101, "Cannot get user's posts", &[]_type.Post {}
+	}
+	return 200, "Lấy bài thành công", &userPosts
 }
