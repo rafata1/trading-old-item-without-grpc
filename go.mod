@@ -7,4 +7,5 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/jmoiron/sqlx v1.3.4
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
+	golang.org/x/text v0.3.6 // indirect
 )
